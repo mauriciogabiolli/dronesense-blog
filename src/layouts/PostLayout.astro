@@ -1,0 +1,113 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import BlogNavbar from '../components/BlogNavbar.astro';
+import BlogFooter from '../components/BlogFooter.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  author?: string;
+  image?: string;
+  imageAlt?: string;
+  category?: string;
+  tags?: string[];
+}
+
+const { title, description, pubDate, updatedDate, author, image, imageAlt, category, tags } = Astro.props;
+
+const formattedDate = pubDate.toLocaleDateString('pt-BR', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout {title} {description} {pubDate} {updatedDate} {author} {image} {imageAlt} {tags}>
+  <BlogNavbar />
+  <main class="max-w-3xl mx-auto px-6 py-12">
+    <!-- Breadcrumb -->
+    <nav class="text-sm text-slate-400 mb-8 flex items-center gap-2">
+      <a href="/" class="hover:text-agro transition-colors">Início</a>
+      <span>/</span>
+      <a href={import.meta.env.BASE_URL} class="hover:text-agro transition-colors">Blog</a>
+      <span>/</span>
+      <span class="text-slate-600 truncate">{title}</span>
+    </nav>
+
+    <!-- Header do post -->
+    <header class="mb-10">
+      {category && (
+        <span class="inline-block bg-agro-light text-agro text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4">
+          {category}
+        </span>
+      )}
+      <h1 class="text-4xl md:text-5xl font-black text-slate-900 leading-tight mb-4">{title}</h1>
+      <p class="text-xl text-slate-500 mb-6">{description}</p>
+      <div class="flex items-center gap-4 text-sm text-slate-400 border-t border-b border-slate-100 py-4">
+        <span>Por <strong class="text-slate-600">{author || 'Equipe DroneSense'}</strong></span>
+        <span>·</span>
+        <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+        {updatedDate && (
+          <>
+            <span>·</span>
+            <span>Atualizado em {updatedDate.toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+          </>
+        )}
+      </div>
+    </header>
+
+    <!-- Imagem de capa -->
+    {image && (
+      <img
+        src={image}
+        alt={imageAlt || title}
+        class="w-full rounded-2xl mb-10 object-cover max-h-96"
+        loading="eager"
+      />
+    )}
+
+    <!-- Conteúdo MDX -->
+    <article class="prose prose-lg prose-slate max-w-none
+      prose-headings:font-black prose-headings:text-slate-900
+      prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4
+      prose-h3:text-xl prose-h3:mt-8
+      prose-p:text-slate-600 prose-p:leading-relaxed
+      prose-a:text-agro prose-a:font-bold prose-a:no-underline hover:prose-a:underline
+      prose-strong:text-slate-800
+      prose-li:text-slate-600
+      prose-blockquote:border-agro prose-blockquote:bg-agro-light prose-blockquote:rounded-r-xl prose-blockquote:py-1
+      prose-code:text-agro prose-code:bg-agro-light prose-code:px-1 prose-code:rounded
+      prose-img:rounded-xl prose-img:shadow-md">
+      <slot />
+    </article>
+
+    <!-- Tags -->
+    {tags && tags.length > 0 && (
+      <div class="mt-12 pt-6 border-t border-slate-100">
+        <p class="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Tags</p>
+        <div class="flex flex-wrap gap-2">
+          {tags.map(tag => (
+            <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">{tag}</span>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- CTA final -->
+    <div class="mt-16 bg-gradient-to-br from-agro to-agro-dark rounded-3xl p-8 text-white text-center">
+      <h3 class="text-2xl font-black mb-2">Pronto para modernizar sua operação?</h3>
+      <p class="text-white/80 mb-6">Fale com nossos especialistas e descubra o drone ideal para sua cultura.</p>
+      <a
+        href="https://api.whatsapp.com/send?phone=5516997347159&text=Ol%C3%A1, vi o blog da DroneSense e tenho interesse!"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 bg-white text-agro font-black px-8 py-3 rounded-full hover:bg-agro-light transition-colors"
+      >
+        Falar com Especialista →
+      </a>
+    </div>
+  </main>
+  <BlogFooter />
+</BaseLayout>

@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlogNavbar from '../components/BlogNavbar.astro';
+import BlogFooter from '../components/BlogFooter.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const featured = posts.filter(p => p.data.featured).slice(0, 1);
+const recent = posts.filter(p => !p.data.featured).slice(0, 6);
+const base = import.meta.env.BASE_URL;
+const postUrl = (id: string) => `${base}/${id}`.replace('//', '/');
+---
+
+<BaseLayout
+  title="Blog DroneSense — Tecnologia e Drones Agrícolas"
+  description="Artigos técnicos sobre drones agrícolas, automação rural, ROI, legislação ANAC e as melhores práticas do setor."
+>
+  <BlogNavbar />
+  <main>
+    <!-- Hero do blog -->
+    <section class="bg-gradient-to-br from-slate-900 to-agro-dark py-20 px-6">
+      <div class="container mx-auto text-center max-w-3xl">
+        <span class="inline-block bg-agro text-white text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-6">Blog DroneSense</span>
+        <h1 class="text-5xl md:text-6xl font-black text-white leading-tight mb-4">
+          Tecnologia que<br /><span class="text-emerald-400">transforma lavouras</span>
+        </h1>
+        <p class="text-slate-300 text-xl">Conteúdo técnico sobre drones agrícolas, automação rural e inovação no campo.</p>
+      </div>
+    </section>
+
+    <div class="container mx-auto px-6 py-16 max-w-6xl">
+      <!-- Post em destaque -->
+      {featured.length > 0 && (
+        <section class="mb-16">
+          <h2 class="text-xs font-black uppercase tracking-widest text-agro mb-6">Em Destaque</h2>
+          {featured.map(post => (
+            <a href={postUrl(post.id)} class="group block bg-slate-50 rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300 md:flex">
+              {post.data.image && (
+                <div class="md:w-1/2 h-64 md:h-auto overflow-hidden">
+                  <img src={post.data.image} alt={post.data.imageAlt || post.data.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                </div>
+              )}
+              <div class="p-8 md:w-1/2 flex flex-col justify-center">
+                <span class="text-xs font-black uppercase tracking-widest text-agro mb-3">{post.data.category}</span>
+                <h3 class="text-3xl font-black text-slate-900 mb-3 group-hover:text-agro transition-colors">{post.data.title}</h3>
+                <p class="text-slate-500 mb-4">{post.data.description}</p>
+                <span class="text-sm font-bold text-agro">Ler artigo →</span>
+              </div>
+            </a>
+          ))}
+        </section>
+      )}
+
+      <!-- Grid de posts -->
+      {recent.length > 0 && (
+        <section>
+          <h2 class="text-xs font-black uppercase tracking-widest text-agro mb-6">Artigos Recentes</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {recent.map(post => (
+              <a href={postUrl(post.id)} class="group bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-lg hover:border-agro/20 transition-all duration-300">
+                {post.data.image && (
+                  <div class="h-48 overflow-hidden">
+                    <img src={post.data.image} alt={post.data.imageAlt || post.data.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  </div>
+                )}
+                <div class="p-6">
+                  <span class="text-[10px] font-black uppercase tracking-widest text-agro">{post.data.category}</span>
+                  <h3 class="text-lg font-black text-slate-900 mt-2 mb-2 group-hover:text-agro transition-colors leading-tight">{post.data.title}</h3>
+                  <p class="text-sm text-slate-400 line-clamp-2">{post.data.description}</p>
+                  <time class="text-xs text-slate-300 mt-3 block">{post.data.pubDate.toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {posts.length === 0 && (
+        <div class="text-center py-20 text-slate-400">
+          <p class="text-6xl mb-4">✍️</p>
+          <p class="text-xl font-bold">Em breve, novos artigos!</p>
+        </div>
+      )}
+    </div>
+  </main>
+  <BlogFooter />
+</BaseLayout>

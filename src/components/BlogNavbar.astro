@@ -1,0 +1,28 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
+  <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-4">
+      <a href="/" class="flex items-center gap-1 text-slate-500 hover:text-emerald-600 transition-colors text-sm font-medium">
+        ← Início
+      </a>
+      <div class="w-px h-6 bg-slate-200"></div>
+      <a href="/" class="flex items-center gap-3">
+        <img src="/img/logo-dronesense.webp" alt="DroneSense" class="h-8 w-auto object-contain" />
+      </a>
+      <div class="w-px h-6 bg-slate-200"></div>
+      <a href={base} class="text-agro font-bold text-sm uppercase tracking-wide hover:text-agro-dark transition-colors">
+        Blog
+      </a>
+    </div>
+    <a
+      href="https://api.whatsapp.com/send?phone=5516997347159&text=Ol%C3%A1, tenho interesse nos drones agr%C3%ADcolas DroneSense!"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="px-5 py-2 bg-agro hover:bg-agro-dark text-white rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-md whitespace-nowrap"
+    >
+      Falar no WhatsApp
+    </a>
+  </div>
+</header>

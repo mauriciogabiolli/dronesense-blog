@@ -1,0 +1,21 @@
+---
+const base = import.meta.env.BASE_URL;
+const year = new Date().getFullYear();
+---
+<footer class="bg-slate-900 text-slate-400 py-12 mt-20">
+  <div class="container mx-auto px-6">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-4">
+        <img src="/img/logo-dronesense.webp" alt="DroneSense" class="h-8 w-auto brightness-0 invert opacity-70" />
+        <span class="text-sm">Blog de Tecnologia Agrícola</span>
+      </div>
+      <div class="flex items-center gap-6 text-sm">
+        <a href="/" class="hover:text-white transition-colors">Site Principal</a>
+        <a href={base} class="hover:text-white transition-colors">Blog</a>
+        <a href="/drones-agricolas/dji-agras-t25p" class="hover:text-white transition-colors">T25P</a>
+        <a href="/drones-agricolas/dji-agras-t70p" class="hover:text-white transition-colors">T70P</a>
+      </div>
+      <p class="text-xs">© {year} DroneSense. Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>
