@@ -1,19 +1,21 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import PostLayout from '../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
-  return posts.map((post) => ({
+  return posts.map(post => ({
     params: { slug: post.id },
     props: post,
   }));
 }
 
-type Props = CollectionEntry<'blog'>;
-
 const post = Astro.props;
 const { Content } = await render(post);
+
+// Estimate reading time from description word count (rough proxy)
+const wordEstimate = post.data.description.split(' ').length * 15;
+const readingTime = Math.max(3, Math.ceil(wordEstimate / 200));
 ---
 
 <PostLayout
@@ -26,6 +28,7 @@ const { Content } = await render(post);
   imageAlt={post.data.imageAlt}
   category={post.data.category}
   tags={post.data.tags}
+  readingTime={readingTime}
 >
   <Content />
 </PostLayout>
